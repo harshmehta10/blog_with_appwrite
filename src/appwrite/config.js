@@ -5,6 +5,7 @@ export class Service {
   client = new Client();
   databases;
   bucket;
+
   constructor() {
     this.client
       .setEndpoint(conf.appwriteUrl)
@@ -12,6 +13,7 @@ export class Service {
     this.databases = new Databases(this.client);
     this.bucket = new Storage(this.client);
   }
+
   async createPost({ title, slug, content, featuredImage, status, userId }) {
     try {
       return await this.databases.createDocument(
@@ -27,7 +29,7 @@ export class Service {
         }
       );
     } catch (error) {
-      console.log("Appwrite service :: createPost :: error", error);
+      console.log("Appwrite serive :: createPost :: error", error);
     }
   }
 
@@ -45,7 +47,7 @@ export class Service {
         }
       );
     } catch (error) {
-      console.log("Appwrite serive :: updatePost ::error", error);
+      console.log("Appwrite serive :: updatePost :: error", error);
     }
   }
 
@@ -75,6 +77,7 @@ export class Service {
       return false;
     }
   }
+
   async getPosts(queries = [Query.equal("status", "active")]) {
     try {
       return await this.databases.listDocuments(
@@ -84,10 +87,12 @@ export class Service {
       );
     } catch (error) {
       console.log("Appwrite serive :: getPosts :: error", error);
+      return false;
     }
   }
 
   // file upload service
+
   async uploadFile(file) {
     try {
       return await this.bucket.createFile(
@@ -104,6 +109,7 @@ export class Service {
   async deleteFile(fileId) {
     try {
       await this.bucket.deleteFile(conf.appwriteBucketId, fileId);
+      return true;
     } catch (error) {
       console.log("Appwrite serive :: deleteFile :: error", error);
       return false;

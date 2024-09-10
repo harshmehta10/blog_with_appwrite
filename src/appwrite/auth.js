@@ -4,6 +4,7 @@ import { Client, Account, ID } from "appwrite";
 export class AuthService {
   client = new Client();
   account;
+
   constructor() {
     this.client
       .setEndpoint(conf.appwriteUrl)
@@ -20,8 +21,8 @@ export class AuthService {
         name
       );
       if (userAccount) {
-        return userAccount;
         // call another method
+        return this.login({ email, password });
       } else {
         return userAccount;
       }
@@ -40,21 +41,23 @@ export class AuthService {
 
   async getCurrentUser() {
     try {
-      await this.account.get();
+      return await this.account.get();
     } catch (error) {
       console.log("Appwrite serive :: getCurrentUser :: error", error);
     }
+
     return null;
   }
 
   async logout() {
     try {
-      return await this.account.deleteSessions();
+      await this.account.deleteSessions();
     } catch (error) {
       console.log("Appwrite serive :: logout :: error", error);
     }
   }
 }
+
 const authService = new AuthService();
 
 export default authService;
